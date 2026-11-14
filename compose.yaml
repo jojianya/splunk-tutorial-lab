@@ -1,0 +1,24 @@
+services:
+  splunk:
+    image: splunk/splunk:10.4.5
+    container_name: splunk-tutorial
+    ports:
+      - "8000:8000"
+    environment:
+      SPLUNK_GENERAL_TERMS: "--accept-sgt-current-at-splunk-com"
+      SPLUNK_START_ARGS: "--accept-license"
+      SPLUNK_PASSWORD: "accessp******nt"
+    volumes:
+      - splunk-var:/opt/splunk/var
+      - splunk-etc:/opt/splunk/etc
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/en-US/account/login"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 180s
+    restart: unless-stopped
+
+volumes:
+  splunk-var:
+  splunk-etc:

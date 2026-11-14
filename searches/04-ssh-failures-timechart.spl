@@ -1,0 +1,8 @@
+# 04 - SSH failures over time
+# Purpose: Show the hourly shape of failed SSH logins.
+# Sourcetype: secure (auth log lines)
+# Look for: A sharp spike, a steady flat line, or a burst that starts suddenly.
+# Time range: All time (the tutorial dataset is old, so recent ranges return nothing)
+# Index: tutorial
+
+index=tutorial sourcetype=secure "Failed password" | timechart span=1h count

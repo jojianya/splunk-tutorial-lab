@@ -1,0 +1,8 @@
+# 01 - Top client IPs
+# Purpose: See which client IPs generate the most web traffic.
+# Sourcetype: access_combined* (access_combined_wcookie in the tutorial data)
+# Look for: One IP far above the rest, or an unfamiliar IP dominating requests.
+# Time range: All time (the tutorial dataset is old, so recent ranges return nothing)
+# Index: tutorial
+
+index=tutorial sourcetype=access_combined* | top limit=10 clientip

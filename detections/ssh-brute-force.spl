@@ -1,0 +1,16 @@
+# SSH Brute Force
+# Description: Groups failed SSH password attempts by source IP in 5-minute bins and alerts on bursts.
+# ATT&CK: T1110 (Brute Force)
+# Severity: Medium
+# Schedule: Every 5 minutes, search window earliest=-10m latest=now
+# Threshold: count >= 10 failed passwords from one src_ip in a 5-minute bin
+# Known false positives: Patch or config automation with a stale credential; a user re-typing a password;
+#   vulnerability scanners running authenticated checks.
+# Index: tutorial
+
+index=tutorial sourcetype=secure "Failed password"
+| bin _time span=5m
+| rex "from (?<src_ip>\d+\.\d+\.\d+\.\d+)"
+| stats count by _time, src_ip
+| where count >= 10
+| sort -_time

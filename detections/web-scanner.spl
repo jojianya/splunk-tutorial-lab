@@ -1,0 +1,15 @@
+# Web Scanner
+# Description: Flags a client IP that receives many 403/404 responses in one 5-minute bin, a sign of path fuzzing.
+# ATT&CK: T1595.003 (Active Scanning: Wordlist Scanning)
+# Severity: Low
+# Schedule: Every 5 minutes, search window earliest=-10m latest=now
+# Threshold: count >= 20 responses with status 403 or 404 from one clientip in a 5-minute bin
+# Known false positives: Search engine crawlers hitting stale URLs; a broken internal link hammered by users;
+#   monitoring probes pointed at removed pages.
+# Index: tutorial
+
+index=tutorial sourcetype=access_combined* status IN (403, 404)
+| bin _time span=5m
+| stats count by _time, clientip
+| where count >= 20
+| sort -_time

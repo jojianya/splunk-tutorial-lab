@@ -1,0 +1,11 @@
+# 03 - SSH failed passwords by IP
+# Purpose: Rank source IPs by failed SSH password attempts.
+# Sourcetype: secure (auth log lines)
+# Look for: An IP with many failures, especially one that is not internal.
+# Time range: All time (the tutorial dataset is old, so recent ranges return nothing)
+# Index: tutorial
+
+index=tutorial sourcetype=secure "Failed password"
+| rex "from (?<src_ip>\d+\.\d+\.\d+\.\d+)"
+| stats count by src_ip
+| sort -count

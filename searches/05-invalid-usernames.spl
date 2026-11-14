@@ -1,0 +1,11 @@
+# 05 - Invalid usernames
+# Purpose: Find source IPs trying usernames that do not exist, and how many distinct names they tried.
+# Sourcetype: secure (auth log lines)
+# Look for: One IP trying many different usernames, a sign of user enumeration.
+# Time range: All time (the tutorial dataset is old, so recent ranges return nothing)
+# Index: tutorial
+
+index=tutorial sourcetype=secure "Invalid user"
+| rex "Invalid user (?<user>\S+) from (?<src_ip>\S+)"
+| stats count dc(user) as unique_users by src_ip
+| sort -count
